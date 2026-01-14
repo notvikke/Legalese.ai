@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import DocumentVault from "@/components/DocumentVault";
 
-export default function DashboardPage() {
+function DashboardContent() {
     const searchParams = useSearchParams();
     const [showSuccess, setShowSuccess] = useState(false);
 

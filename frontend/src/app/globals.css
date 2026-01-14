@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a; /* Slate 900 */
+  --foreground: #f8fafc; /* Slate 50 */
+  
+  /* Brand Colors */
+  --primary: #3b82f6; /* Blue 500 */
+  --primary-dark: #1d4ed8;
+  --secondary: #64748b; /* Slate 500 */
+  
+  /* Traffic Light System */
+  --risk-red: #ef4444;
+  --risk-yellow: #eab308;
+  --risk-green: #22c55e;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] transition-all font-medium;
+  }
+  .card {
+    @apply bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm;
+  }
+  .glass-panel {
+    @apply bg-white/5 border border-white/10 backdrop-blur-lg;
+  }
+}

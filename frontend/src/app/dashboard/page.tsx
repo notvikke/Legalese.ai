@@ -43,3 +43,11 @@ function DashboardContent() {
         </>
     );
 }
+
+export default function DashboardPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="text-slate-400">Loading...</div></div>}>
+            <DashboardContent />
+        </Suspense>
+    );
+}

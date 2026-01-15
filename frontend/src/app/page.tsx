@@ -20,13 +20,9 @@ export default function HomePage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-50 selection:bg-blue-500/30">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-slate-50 selection:bg-blue-500/30">
             {/* Hero Section */}
             <div className="relative overflow-hidden">
-                {/* Background Blobs */}
-                <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-                <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-
                 <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
                     <div className="text-center max-w-4xl mx-auto">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6 animate-fadeIn">

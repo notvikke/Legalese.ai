@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { API_ENDPOINTS } from '@/config/api';
 import CountdownTimer from './CountdownTimer';
+import { useDev } from '@/context/DevContext';
 
 interface UserStatus {
     is_premium: boolean;
@@ -16,6 +17,8 @@ interface UserStatus {
 const DocumentVault = () => {
     const router = useRouter();
     const { userId } = useAuth();
+    const { isProOverride, resetCreditsTrigger } = useDev();
+
     const [isUploading, setIsUploading] = useState(false);
     const [status, setStatus] = useState<UserStatus | null>(null);
     const [documents, setDocuments] = useState<any[]>([]);
@@ -24,7 +27,7 @@ const DocumentVault = () => {
     useEffect(() => {
         if (!userId) return;
         fetchData();
-    }, [userId]);
+    }, [userId, resetCreditsTrigger]); // Re-fetch on credit reset trigger
 
     const fetchData = async () => {
         try {
@@ -48,11 +51,21 @@ const DocumentVault = () => {
         }
     };
 
+    // Apply Dev Overrides
+    const effectiveStatus: UserStatus | null = status ? {
+        ...status,
+        is_premium: isProOverride ? true : status.is_premium,
+        // If mocking pro and no expiry, mock an expiry 7 days out
+        premium_expires_at: isProOverride && !status.premium_expires_at
+            ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            : status.premium_expires_at
+    } : null;
+
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.[0]) return;
 
-        // Client-side limit check
-        if (status && !status.is_premium && status.document_count >= status.limit) {
+        // Client-side limit check using effectiveStatus
+        if (effectiveStatus && !effectiveStatus.is_premium && effectiveStatus.document_count >= effectiveStatus.limit) {
             router.push('/subscribe');
             return;
         }
@@ -70,7 +83,7 @@ const DocumentVault = () => {
             });
 
             if (!res.ok) {
-                if (res.status === 402) {
+                if (res.status === 402 && !isProOverride) {
                     router.push('/subscribe');
                     return;
                 }
@@ -117,7 +130,7 @@ const DocumentVault = () => {
         );
     }
 
-    const isLimitReached = status && !status.is_premium && status.document_count >= status.limit;
+    const isLimitReached = effectiveStatus && !effectiveStatus.is_premium && effectiveStatus.document_count >= effectiveStatus.limit;
 
     return (
         <div className="bg-slate-900 min-h-screen p-8">
@@ -134,7 +147,7 @@ const DocumentVault = () => {
                             </button>
                         </div>
                         <p className="text-slate-400 mt-1">
-                            {status && !status.is_premium
+                            {effectiveStatus && !effectiveStatus.is_premium
                                 ? "Your first 3 scans are on us! Analyze contracts instantly."
                                 : "Manage and analyze your legal contracts"}
                         </p>
@@ -142,22 +155,22 @@ const DocumentVault = () => {
 
                     {/* Usage Stats & Actions */}
                     <div className="flex items-center gap-4">
-                        {status && !status.is_premium && (
+                        {effectiveStatus && !effectiveStatus.is_premium && (
                             <div className="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700">
                                 <span className="text-slate-400 text-sm">Free Plan Usage: </span>
                                 <span className={`font-bold ${isLimitReached ? 'text-red-400' : 'text-green-400'}`}>
-                                    {status.document_count}/{status.limit}
+                                    {effectiveStatus.document_count}/{effectiveStatus.limit}
                                 </span>
                             </div>
                         )}
 
-                        {status?.is_premium && (
+                        {effectiveStatus?.is_premium && (
                             <div className="flex items-center gap-3">
                                 <div className="bg-blue-900/30 px-4 py-2 rounded-lg border border-blue-500/30">
                                     <span className="text-blue-200 font-semibold">✨ Premium Plan</span>
                                 </div>
-                                {status.premium_expires_at && (
-                                    <CountdownTimer targetDate={status.premium_expires_at} />
+                                {effectiveStatus.premium_expires_at && (
+                                    <CountdownTimer targetDate={effectiveStatus.premium_expires_at} />
                                 )}
                             </div>
                         )}
@@ -188,7 +201,7 @@ const DocumentVault = () => {
                 </div>
 
                 {/* Available Plans Link (if free) */}
-                {!status?.is_premium && !isLimitReached && (
+                {!effectiveStatus?.is_premium && !isLimitReached && (
                     <div className="mb-8 flex justify-end">
                         <button
                             onClick={() => router.push('/subscribe')}
@@ -202,7 +215,6 @@ const DocumentVault = () => {
                 {/* Documents Grid */}
                 <div className="grid gap-4">
                     {documents.map((doc: any) => {
-                        // Safe extraction of risk score from first result if exists
                         const firstClause = doc.results && doc.results.length > 0 ? doc.results[0] : null;
 
                         return (

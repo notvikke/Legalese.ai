@@ -33,7 +33,7 @@ export default function HomePage() {
                             v2.0 Now Live
                         </div>
                         <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
-                            Legalese<span className="text-blue-500">.ai</span>
+                            Legaleze<span className="text-blue-500">.ai</span>
                         </h1>
                         <p className="text-2xl text-slate-300 mb-6 font-light">
                             AI-Powered Contract Analysis
@@ -69,6 +69,9 @@ export default function HomePage() {
                     {/* Feature 1: AI Negotiation Assistant */}
                     <div className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute top-4 right-4 bg-yellow-500/10 text-yellow-400 text-xs font-bold px-2 py-1 rounded border border-yellow-500/30 z-20">
+                            PRO FEATURE
+                        </div>
 
                         <div className="p-8 md:p-10 relative z-10">
                             <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
@@ -108,6 +111,9 @@ export default function HomePage() {
                     {/* Feature 2: PDF Export */}
                     <div className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden flex flex-col">
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute top-4 right-4 bg-yellow-500/10 text-yellow-400 text-xs font-bold px-2 py-1 rounded border border-yellow-500/30 z-20">
+                            PRO FEATURE
+                        </div>
 
                         <div className="p-8 md:p-10 relative z-10 flex-grow">
                             <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
@@ -155,7 +161,7 @@ export default function HomePage() {
                             <h2 className="text-2xl font-bold text-white mb-4">Security First Guarantee</h2>
                             <p className="text-slate-400 text-lg leading-relaxed">
                                 Your data is your own. We utilize <span className="text-blue-400 font-semibold">stateless processing</span> for all exports and re-writes.
-                                Legalese.ai <span className="text-white font-medium">never stores your documents</span> on our servers and never uses your private data to train AI models.
+                                Legaleze.ai <span className="text-white font-medium">never stores your documents</span> on our servers and never uses your private data to train AI models.
                             </p>
                         </div>
                     </div>
@@ -229,7 +235,7 @@ export default function HomePage() {
                             Ready to analyze your first contract?
                         </h2>
                         <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto">
-                            Join thousands of smart professionals who use Legalese.ai to sign with confidence.
+                            Join thousands of smart professionals who use Legaleze.ai to sign with confidence.
                             <span className="text-white font-medium block mt-2">Get your first 3 risk reports completely free.</span>
                         </p>
 

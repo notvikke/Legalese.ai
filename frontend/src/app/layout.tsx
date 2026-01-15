@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from '@clerk/nextjs';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Providers } from "./providers";
+import DevToolbar from "@/components/DevToolbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Legalese.ai | AI Contract Risk Analysis",
+  title: "Legaleze.ai | AI Contract Risk Analysis",
   description: "Analyze legal contracts for risk using advanced AI.",
 };
-
-
 
 export default function RootLayout({
   children,
@@ -20,16 +19,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} min-h-screen bg-[var(--background)] flex flex-col`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} min-h-screen bg-[var(--background)] flex flex-col`}>
+        <Providers>
           <Navbar />
           <main className="pt-16 flex-grow">
             {children}
           </main>
           <Footer />
-        </body>
-      </html>
-    </ClerkProvider>
+          <DevToolbar />
+        </Providers>
+      </body>
+    </html>
   );
 }

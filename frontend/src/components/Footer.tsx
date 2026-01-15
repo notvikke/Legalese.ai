@@ -10,7 +10,7 @@ export default function Footer() {
                     <div className="col-span-1 md:col-span-2">
                         <Link href="/" className="inline-block">
                             <h3 className="text-xl font-bold text-white mb-4 hover:opacity-80 transition-opacity">
-                                Legalese<span className="text-blue-500">.ai</span>
+                                Legaleze<span className="text-blue-500">.ai</span>
                             </h3>
                         </Link>
                         <p className="text-slate-400 max-w-sm mb-4">
@@ -40,10 +40,9 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
-                    <p>© {new Date().getFullYear()} Legalese.ai. All rights reserved.</p>
-                    <p className="mt-2 md:mt-0 flex items-center gap-1">
-                        Built with ❤️ by <a href="https://notvikke.github.io/portfolio/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400 border-b border-transparent hover:border-blue-400 transition-all ml-1">Vignesh</a>
+                <div className="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+                    <p>
+                        Built with ❤️ by <a href="https://notvikke.github.io/portfolio/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400 transition-colors">Vignesh</a> | © 2026 Legaleze.ai
                     </p>
                 </div>
             </div>

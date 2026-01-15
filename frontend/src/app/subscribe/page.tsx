@@ -99,23 +99,23 @@ export default function SubscribePage() {
                         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-500 text-white px-3 py-0.5 rounded-full text-xs font-bold whitespace-nowrap">
                             MOST FLEXIBLE
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">1-Week Pass</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">1-Week Pro Pass</h3>
                         <div className="text-3xl font-bold text-white mb-4">
                             $10<span className="text-base text-slate-400 font-normal">/one-time</span>
                         </div>
-                        <p className="text-slate-400 text-sm mb-4">No recurring billing. Perfect for quick reviews.</p>
+                        <p className="text-slate-400 text-sm mb-4">7 Days of Unlimited AI Power. No Subscriptions. No Hassle.</p>
                         <ul className="space-y-3 mb-8 flex-grow">
                             <li className="flex items-start gap-2 text-white text-sm">
                                 <span className="text-purple-400 mt-0.5">✓</span>
-                                <span><strong>7 days</strong> full access</span>
+                                <span><strong>Instant Access</strong> to Pro tools</span>
                             </li>
                             <li className="flex items-start gap-2 text-white text-sm">
                                 <span className="text-purple-400 mt-0.5">✓</span>
-                                <span>Unlimited documents</span>
+                                <span>Unlimited Analysis & Re-writes</span>
                             </li>
                             <li className="flex items-start gap-2 text-white text-sm">
                                 <span className="text-purple-400 mt-0.5">✓</span>
-                                <span>Risk rewriting</span>
+                                <span>Auto-expires (No Cancellation needed)</span>
                             </li>
                         </ul>
                         <button

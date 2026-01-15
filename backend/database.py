@@ -14,9 +14,27 @@ if not DATABASE_URL:
     print("WARNING: DATABASE_URL not set. Using local SQLite database.")
     # Use /tmp for Vercel/Serverless writability (Note: Data is ephemeral)
     DATABASE_URL = "sqlite:////tmp/legalese_local.db"
-elif DATABASE_URL.startswith("postgres://"):
-    # Fix for Heroku/Render postgres:// URLs (SQLAlchemy requires postgresql://)
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+else:
+    # 1. Fix postgres protocol
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+    # 2. Clean unsupported query parameters for psycopg2 (e.g. prepared_statement*)
+    try:
+        from sqlalchemy.engine.url import make_url
+        url_obj = make_url(DATABASE_URL)
+        
+        # Filter out keys starting with 'prepared_statement' or 'pgbouncer' which confuse libpq
+        clean_query = {
+            k: v for k, v in url_obj.query.items() 
+            if not k.startswith("prepared_statement") and k != "pgbouncer"
+        }
+        
+        # Reconstruct URL with cleaned query
+        url_obj = url_obj._replace(query=clean_query)
+        DATABASE_URL = str(url_obj)
+    except Exception as e:
+        print(f"Warning: Failed to sanitize DATABASE_URL: {e}")
 
 # Configure engine with appropriate settings
 if DATABASE_URL.startswith("sqlite"):

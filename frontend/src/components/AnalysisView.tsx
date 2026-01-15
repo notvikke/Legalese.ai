@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { API_ENDPOINTS } from '@/config/api';
 
 interface AnalysisResult {
     text: string;
@@ -28,7 +29,7 @@ const AnalysisView = () => {
         // Mock data for MVP if backend not reachable immediately
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:8000/api/documents/${id}`);
+                const res = await fetch(API_ENDPOINTS.document(Number(id)));
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);

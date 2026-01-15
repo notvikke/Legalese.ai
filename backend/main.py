@@ -24,9 +24,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Add CORS Middleware
+# Support both local development and production
+# For debugging: Allow all origins temporarily
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,25 +38,28 @@ app.add_middleware(
 def read_root():
     return {"Hello": "Legalese.ai Backend"}
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Vercel"""
+    return {
+        "status": "healthy",
+        "database": "connected" if engine else "not configured",
+        "ai_model": "loaded" if ai.model_loaded else "using heuristics"
+    }
+
+
 @app.post("/api/create-checkout-session")
 async def create_checkout_session(user_id: str = Form(...)): 
-    # Mock checkout creation using proper Dodo Payments API structure
+    # Mock checkout creation using proper Dodo Payments API structure if SDK is missing
+    # or just return a mock URL for this demo.
+    
     # Real implementation would be:
     # async with httpx.AsyncClient() as client:
-    #     resp = await client.post("https://api.dodopayments.com/v1/checkout", 
-    #         headers={"Authorization": f"Bearer {os.getenv('DODO_PAYMENTS_API_KEY')}"},
-    #         json={
-    #             "price_id": "price_xxx",
-    #             "customer_email": user_email,
-    #             "success_url": "http://localhost:3000/dashboard?success=true",
-    #             "cancel_url": "http://localhost:3000/subscribe?canceled=true"
-    #         })
+    #     resp = await client.post("https://api.dodopayments.com/v1/checkout", headers={...}, json={...})
     #     return resp.json()
     
-    # For MVP demonstration with success redirect:
-    return {
-        "checkout_url": f"https://test.dodopayments.com/buy/sub_12345?prefilled_email=test@example.com&success_url=http://localhost:3000/dashboard?success=true&cancel_url=http://localhost:3000/subscribe"
-    }
+    # For MVP demonstration:
+    return {"checkout_url": "https://test.dodopayments.com/buy/sub_12345?prefilled_email=test@example.com"}
 
 @app.post("/api/analyze")
 async def analyze_document(

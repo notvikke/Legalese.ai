@@ -1,44 +1,38 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool, StaticPool
+from sqlalchemy.pool import NullPool
 import os
 from dotenv import load_dotenv
-import time
 
 load_dotenv()
 
-# Original Postgres URL
 DATABASE_URL = os.getenv("DATABASE_URL")
-engine = None
-SessionLocal = None
 
-try:
-    print(f"Attempting to connect to Supabase: {DATABASE_URL.split('@')[-1] if DATABASE_URL and '@' in DATABASE_URL else '...'}")
-    # Try creating engine and connecting
-    if not DATABASE_URL:
-        raise ValueError("DATABASE_URL not set")
-    
-    # Use NullPool for Supavisor
-    engine = create_engine(DATABASE_URL, poolclass=NullPool, connect_args={'connect_timeout': 5})
-    
-    # Test connection
-    with engine.connect() as connection:
-        print("Successfully connected to Supabase (Postgres).")
-
-except Exception as e:
-    print(f"\n[WARNING] Could not connect to Supabase: {e}")
-    print("[INFO] Falling back to local SQLite database for development.\n")
-    
-    # Fallback to SQLite
+# Validate and fix DATABASE_URL
+if not DATABASE_URL:
+    print("WARNING: DATABASE_URL not set. Using local SQLite database.")
     DATABASE_URL = "sqlite:///./legalese_local.db"
+elif DATABASE_URL.startswith("postgres://"):
+    # Fix for Heroku/Render postgres:// URLs (SQLAlchemy requires postgresql://)
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Configure engine with appropriate settings
+if DATABASE_URL.startswith("sqlite"):
+    # SQLite doesn't support connection pooling
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    # PostgreSQL with NullPool for serverless environments (Vercel)
+    # NullPool prevents "too many connections" errors by not maintaining a connection pool
+    # Each request gets a fresh connection that's immediately closed after use
     engine = create_engine(
-        DATABASE_URL, 
-        connect_args={"check_same_thread": False}, 
-        poolclass=StaticPool
+        DATABASE_URL,
+        poolclass=NullPool,
+        pool_pre_ping=True,  # Verify connections before using
     )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
 def get_db():

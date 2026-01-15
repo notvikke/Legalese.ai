@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
+import { API_ENDPOINTS } from '@/config/api';
+
 
 const DocumentVault = () => {
     const router = useRouter();
@@ -25,7 +27,7 @@ const DocumentVault = () => {
         try {
             const token = await getToken();
             // In a real scenario, use correct backend URL
-            const res = await fetch("http://localhost:8000/api/analyze", {
+            const res = await fetch(API_ENDPOINTS.analyze, {
                 method: "POST",
                 body: formData,
                 // headers: { Authorization: `Bearer ${token}` } 
@@ -37,7 +39,7 @@ const DocumentVault = () => {
                     const confirmUpgrade = confirm("You've reached your free limit. Upgrade to Premium for $15/mo to continue?");
                     if (confirmUpgrade) {
                         // Create checkout session
-                        const checkoutRes = await fetch("http://localhost:8000/api/create-checkout-session", {
+                        const checkoutRes = await fetch(API_ENDPOINTS.createCheckoutSession, {
                             method: "POST",
                             headers: { "Content-Type": "application/x-www-form-urlencoded" },
                             body: new URLSearchParams({ user_id: userId || "" })

@@ -1,13 +1,26 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 import torch
 import re
+import os
 
 # Global variables
 tokenizer = None
 model = None
+model_loaded = False
 
 def load_ai_model():
-    global tokenizer, model
+    """
+    Load AI model. In production, this might be skipped if the model is too large
+    or if using a heuristic-only approach initially.
+    """
+    global tokenizer, model, model_loaded
+    
+    # Skip model loading in production if environment variable is set
+    if os.getenv("SKIP_AI_MODEL_LOADING", "false").lower() == "true":
+        print("Skipping AI model loading (using heuristics only)")
+        model_loaded = False
+        return
+    
     model_name = "nlpaueb/legal-bert-base-uncased"
     print(f"Loading {model_name}...")
     try:
@@ -17,9 +30,11 @@ def load_ai_model():
         # but satisfies the requirement to 'use' the model). 
         # In a real app, we'd load a fine-tuned checkpoint.
         model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=3)
-        print("Model loaded.")
+        model_loaded = True
+        print("Model loaded successfully.")
     except Exception as e:
-        print(f"Error loading model: {e}")
+        print(f"Error loading model: {e}. Falling back to heuristic analysis.")
+        model_loaded = False
 
 def segment_text(text: str) -> list[str]:
     # Simple heuristic splitting by periods or newlines for now

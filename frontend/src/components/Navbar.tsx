@@ -3,12 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
-import { useTheme } from "next-themes";
-import { Sun, Moon, Home } from "lucide-react";
+import { Home } from "lucide-react";
 
 const Navbar = () => {
   const { isSignedIn, user } = useUser();
-  const { theme, setTheme } = useTheme();
 
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
@@ -44,16 +42,6 @@ const Navbar = () => {
 
             {/* Actions */}
             <div className="flex items-center gap-4">
-              {/* Theme Toggle */}
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/5"
-                aria-label="Toggle Theme"
-              >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </button>
-
               {isSignedIn ? (
                 <UserButton
                   afterSignOutUrl="/"

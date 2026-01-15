@@ -163,5 +163,26 @@ async def dodo_webhook(request: Request, db: Session = Depends(get_db)):
     # Handle event (e.g. subscription.created -> set is_premium=True)
     return {"status": "received"}
 
+@app.get("/api/user/status")
+def get_user_status(user_id: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    
+    # If user doesn't exist yet (first login), treat as free user with 0 docs
+    if not user:
+        return {
+            "is_premium": False,
+            "document_count": 0,
+            "limit": 1
+        }
+    
+    doc_count = db.query(models.Document).filter(models.Document.user_id == user_id).count()
+    
+    return {
+        "is_premium": user.is_premium,
+        "document_count": doc_count,
+        "limit": 1 if not user.is_premium else -1 # -1 means unlimited
+    }
+
+
 if __name__ == "__main__":
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)

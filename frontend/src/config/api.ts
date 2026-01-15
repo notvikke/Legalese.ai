@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     documents: `${API_BASE_URL}/api/documents`,
     document: (id: number) => `${API_BASE_URL}/api/documents/${id}`,
     health: `${API_BASE_URL}/health`,
+    userStatus: `${API_BASE_URL}/api/user/status`,
 };
 
 export default API_BASE_URL;

@@ -2,14 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth, useClerk } from '@clerk/nextjs';
-import { useState } from 'react';
-import { Wand2, FileDown, Shield, CheckCircle2, AlertTriangle, ArrowRight, FileUp, BrainCircuit, FileCheck, X } from 'lucide-react';
+import { Wand2, FileDown, Shield, CheckCircle2, AlertTriangle, ArrowRight, FileUp, BrainCircuit, FileCheck } from 'lucide-react';
 
 export default function HomePage() {
     const router = useRouter();
     const { isSignedIn } = useAuth();
     const { openSignIn } = useClerk();
-    const [activeFeature, setActiveFeature] = useState<string | null>(null);
 
     const handleGetStarted = () => {
         if (isSignedIn) {
@@ -23,31 +21,6 @@ export default function HomePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-slate-50 selection:bg-blue-500/30">
-            {/* Image Modal */}
-            {activeFeature && (
-                <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fadeIn"
-                    onClick={() => setActiveFeature(null)}
-                >
-                    <button
-                        onClick={() => setActiveFeature(null)}
-                        className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/10 p-2 rounded-full"
-                    >
-                        <X className="w-6 h-6" />
-                    </button>
-                    <div
-                        className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-slate-900"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <img
-                            src={activeFeature}
-                            alt="Feature Preview"
-                            className="w-full h-full object-contain"
-                        />
-                    </div>
-                </div>
-            )}
-
             {/* Hero Section */}
             <div className="relative overflow-hidden">
                 <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
@@ -94,17 +67,10 @@ export default function HomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
                     {/* Feature 1: AI Negotiation Assistant */}
-                    <div
-                        onClick={() => setActiveFeature('/assets/feature_ai_rewrite.png')}
-                        className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden cursor-pointer"
-                        title="Click to view preview"
-                    >
+                    <div className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         <div className="absolute top-4 right-4 bg-yellow-500/10 text-yellow-400 text-xs font-bold px-2 py-1 rounded border border-yellow-500/30 z-20">
                             PRO FEATURE
-                        </div>
-                        <div className="absolute bottom-4 right-4 bg-slate-900/80 text-white text-xs px-2 py-1 rounded border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                            <span>🔍 Click to preview</span>
                         </div>
 
                         <div className="p-8 md:p-10 relative z-10">
@@ -143,17 +109,10 @@ export default function HomePage() {
                     </div>
 
                     {/* Feature 2: PDF Export */}
-                    <div
-                        onClick={() => setActiveFeature('/assets/feature_pdf_report.png')}
-                        className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden flex flex-col cursor-pointer"
-                        title="Click to view preview"
-                    >
+                    <div className="group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 overflow-hidden flex flex-col">
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         <div className="absolute top-4 right-4 bg-yellow-500/10 text-yellow-400 text-xs font-bold px-2 py-1 rounded border border-yellow-500/30 z-20">
                             PRO FEATURE
-                        </div>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/50 p-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30 pointer-events-none backdrop-blur-sm">
-                            <div className="text-white font-bold">View Sample Report</div>
                         </div>
 
                         <div className="p-8 md:p-10 relative z-10 flex-grow">

@@ -212,19 +212,42 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* Pricing Preview */}
-            <div className="pb-24 text-center">
-                <h2 className="text-3xl font-bold text-white mb-6">Simple Pricing</h2>
-                <div className="inline-block bg-gradient-to-b from-slate-800 to-slate-800/50 p-1 rounded-2xl">
-                    <div className="bg-slate-900 rounded-xl p-8 border border-slate-700/50">
-                        <div className="text-slate-400 mb-2 uppercase tracking-wide text-xs font-bold">Start For Free</div>
-                        <div className="text-5xl font-bold text-white mb-4 tracking-tight">3 <span className="text-lg text-slate-500 font-normal">documents</span></div>
-                        <button
-                            onClick={() => router.push('/subscribe')}
-                            className="w-full py-3 bg-white text-slate-900 font-bold rounded-lg hover:bg-blue-50 transition-colors"
-                        >
-                            View Plans
-                        </button>
+            {/* Final CTA Section */}
+            <div className="pb-24 pt-10 container mx-auto px-4">
+                <div className="relative rounded-3xl overflow-hidden">
+                    {/* Background Gradients */}
+                    <div className="absolute inset-0 bg-blue-600/20 mix-blend-multiply"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 opacity-90"></div>
+
+                    <div className="relative px-6 py-16 md:py-20 text-center max-w-4xl mx-auto">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium mb-6">
+                            <span className="flex h-2 w-2 rounded-full bg-blue-400"></span>
+                            No Credit Card Required
+                        </div>
+
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                            Ready to analyze your first contract?
+                        </h2>
+                        <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto">
+                            Join thousands of smart professionals who use Legalese.ai to sign with confidence.
+                            <span className="text-white font-medium block mt-2">Get your first 3 risk reports completely free.</span>
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <button
+                                onClick={() => router.push('/subscribe')}
+                                className="px-8 py-4 bg-white text-blue-900 font-bold rounded-xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-white/20 hover:scale-105 flex items-center gap-2"
+                            >
+                                Start For Free
+                                <ArrowRight className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => router.push('/subscribe')}
+                                className="px-8 py-4 bg-transparent border border-slate-600 text-white font-semibold rounded-xl hover:bg-slate-800 transition-all"
+                            >
+                                View All Plans
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

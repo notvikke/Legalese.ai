@@ -1,20 +1,35 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { API_ENDPOINTS } from '@/config/api';
 
 export default function SubscribePage() {
-    const { userId } = useAuth();
+    const { userId, isSignedIn } = useAuth();
+    const { openSignIn } = useClerk();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
+    const handleFreePlan = () => {
+        if (isSignedIn) {
+            router.push('/dashboard');
+        } else {
+            openSignIn({
+                redirectUrl: '/dashboard',
+            });
+        }
+    };
+
     const handleSubscribe = async () => {
-        if (!userId) {
-            alert('Please sign in first');
+        if (!isSignedIn) {
+            openSignIn({
+                redirectUrl: '/subscribe', // Return here after sign in to complete purchase
+            });
             return;
         }
+
+        if (!userId) return;
 
         setIsLoading(true);
         try {
@@ -72,7 +87,7 @@ export default function SubscribePage() {
                             </li>
                         </ul>
                         <button
-                            onClick={() => router.push('/dashboard')}
+                            onClick={handleFreePlan}
                             className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-all"
                         >
                             Get Started Free

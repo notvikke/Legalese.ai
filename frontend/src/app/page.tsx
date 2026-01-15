@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth, useClerk } from '@clerk/nextjs';
-import { Wand2, FileDown, Shield, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Wand2, FileDown, Shield, CheckCircle2, AlertTriangle, ArrowRight, FileUp, BrainCircuit, FileCheck } from 'lucide-react';
 
 export default function HomePage() {
     const router = useRouter();
@@ -162,26 +162,53 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* How It Works (Simplified) */}
-            <div className="py-24 container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-white text-center mb-16">How It Works</h2>
-                <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-                    {[
-                        { step: 1, title: 'Upload Contract', desc: 'Securely upload your PDF or DOCX file.', icon: '📄' },
-                        { step: 2, title: 'AI Analysis', desc: 'Our engine identifies risks instantly.', icon: '⚡' },
-                        { step: 3, title: 'Review & Actions', desc: 'Export reports or rewrite clauses.', icon: '✅' }
-                    ].map((item) => (
-                        <div key={item.step} className="text-center group">
-                            <div className="w-16 h-16 mx-auto bg-slate-800 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg border border-slate-700 group-hover:border-blue-500/50 group-hover:scale-110 transition-all duration-300">
-                                {item.icon}
+            {/* How It Works (Premium) */}
+            <div className="py-24 container mx-auto px-4 relative">
+                {/* Background Decoration */}
+                <div className="absolute inset-0 bg-blue-900/5 skew-y-3 transform -skew-y-3 z-0 pointer-events-none"></div>
+
+                <h2 className="text-4xl font-bold text-white text-center mb-20 relative z-10">How It Works</h2>
+                <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto relative z-10">
+
+                    {/* Step 1 */}
+                    <div className="relative group">
+                        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="relative p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/80 hover:border-blue-500/30 transition-all duration-300 text-center height-full">
+                            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500/20 to-blue-600/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-blue-500/20">
+                                <FileUp className="w-10 h-10 text-blue-400" />
                             </div>
-                            <div className="inline-block px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-slate-400 mb-3">
-                                Step 0{item.step}
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                            <p className="text-slate-400">{item.desc}</p>
+                            <div className="absolute top-6 right-6 text-5xl font-bold text-slate-800/50 pointer-events-none select-none">01</div>
+                            <h3 className="text-xl font-bold text-white mb-3">Upload Contract</h3>
+                            <p className="text-slate-400 leading-relaxed">Securely upload your PDF or DOCX file to our encrypted vault.</p>
                         </div>
-                    ))}
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="relative group">
+                        <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="relative p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/80 hover:border-purple-500/30 transition-all duration-300 text-center height-full">
+                            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/20 to-purple-600/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-purple-500/20">
+                                <BrainCircuit className="w-10 h-10 text-purple-400" />
+                            </div>
+                            <div className="absolute top-6 right-6 text-5xl font-bold text-slate-800/50 pointer-events-none select-none">02</div>
+                            <h3 className="text-xl font-bold text-white mb-3">AI Analysis</h3>
+                            <p className="text-slate-400 leading-relaxed">Our advanced engine scans for risks, loopholes, and non-standard clauses instantly.</p>
+                        </div>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="relative group">
+                        <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="relative p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/80 hover:border-green-500/30 transition-all duration-300 text-center height-full">
+                            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-500/20 to-green-600/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-green-500/20">
+                                <FileCheck className="w-10 h-10 text-green-400" />
+                            </div>
+                            <div className="absolute top-6 right-6 text-5xl font-bold text-slate-800/50 pointer-events-none select-none">03</div>
+                            <h3 className="text-xl font-bold text-white mb-3">Review & Actions</h3>
+                            <p className="text-slate-400 leading-relaxed">Get a summary report, rewrite risky clauses, or export for your legal team.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

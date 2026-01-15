@@ -75,54 +75,61 @@ async def analyze_document(
     user_id: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    # 1. Read file
-    content = await file.read()
+    try:
+        # 1. Read file
+        content = await file.read()
+        
+        # 2. Extract text
+        text = extraction.extract_text(file.filename, content)
+        if not text:
+            raise HTTPException(status_code=400, detail="Could not extract text or unsupported file format.")
+        
+        # 3. Check subscription limit
+        # Check if user exists, if not create
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if not user:
+             # In real app, user creation happens via Clerk webhook, but for now lazy-create
+             user = models.User(id=user_id, email="user_from_clerk@example.com") 
+             db.add(user)
+             db.commit()
+        
+        if not user.is_premium:
+            doc_count = db.query(models.Document).filter(models.Document.user_id == user_id).count()
+            if doc_count >= 3: # Updated limit to 3
+                raise HTTPException(status_code=402, detail="Free limit reached. Upgrade to Premium.")
     
-    # 2. Extract text
-    text = extraction.extract_text(file.filename, content)
-    if not text:
-        raise HTTPException(status_code=400, detail="Could not extract text or unsupported file format.")
-    
-    # 3. Check subscription limit
-    # Check if user exists, if not create
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-         # In real app, user creation happens via Clerk webhook, but for now lazy-create
-         user = models.User(id=user_id, email="user_from_clerk@example.com") 
-         db.add(user)
-         db.commit()
-    
-    if not user.is_premium:
-        doc_count = db.query(models.Document).filter(models.Document.user_id == user_id).count()
-        if doc_count >= 3: # Updated limit to 3
-            raise HTTPException(status_code=402, detail="Free limit reached. Upgrade to Premium.")
-
-    # 4. Save Document
-    db_doc = models.Document(user_id=user_id, filename=file.filename, content=text)
-    db.add(db_doc)
-    db.commit()
-    db.refresh(db_doc)
-    
-    # 5. Analyze
-    analysis_results = ai.process_document(text)
-    
-    # 6. Save Clauses
-    for item in analysis_results:
-        clause = models.Clause(
-            document_id=db_doc.id,
-            text=item['text'],
-            risk_level=item['risk'],
-            explanation=item['explanation']
-        )
-        db.add(clause)
-    
-    db.commit()
-    
-    return {
-        "document_id": db_doc.id,
-        "filename": db_doc.filename,
-        "results": analysis_results
-    }
+        # 4. Save Document
+        db_doc = models.Document(user_id=user_id, filename=file.filename, content=text)
+        db.add(db_doc)
+        db.commit()
+        db.refresh(db_doc)
+        
+        # 5. Analyze
+        analysis_results = ai.process_document(text)
+        
+        # 6. Save Clauses
+        for item in analysis_results:
+            clause = models.Clause(
+                document_id=db_doc.id,
+                text=item['text'],
+                risk_level=item['risk'],
+                explanation=item['explanation']
+            )
+            db.add(clause)
+        
+        db.commit()
+        
+        return {
+            "document_id": db_doc.id,
+            "filename": db_doc.filename,
+            "results": analysis_results
+        }
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        print(f"Error in analyze: {e}")
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=500, content={"detail": f"Backend Error: {str(e)}"})
 
 @app.get("/api/documents")
 def get_documents(user_id: str, db: Session = Depends(get_db)):

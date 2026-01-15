@@ -1,12 +1,24 @@
+# Core Framework
 fastapi
-uvicorn
+uvicorn[standard]
+gunicorn
+
+# Database
 sqlalchemy
 psycopg2-binary
+
+# Document Processing
 pymupdf
 python-docx
-# dodo-payments
+
+# AI/ML
 transformers
 torch
+
+# Utilities
 python-multipart
 python-dotenv
 httpx
+
+# Payment Processing
+# dodo-payments

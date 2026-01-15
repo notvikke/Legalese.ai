@@ -12,7 +12,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # Validate and fix DATABASE_URL
 if not DATABASE_URL:
     print("WARNING: DATABASE_URL not set. Using local SQLite database.")
-    DATABASE_URL = "sqlite:///./legalese_local.db"
+    # Use /tmp for Vercel/Serverless writability (Note: Data is ephemeral)
+    DATABASE_URL = "sqlite:////tmp/legalese_local.db"
 elif DATABASE_URL.startswith("postgres://"):
     # Fix for Heroku/Render postgres:// URLs (SQLAlchemy requires postgresql://)
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)

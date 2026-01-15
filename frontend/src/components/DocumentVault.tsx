@@ -83,8 +83,22 @@ const DocumentVault = () => {
                     router.push('/subscribe');
                     return;
                 }
-                const err = await res.json();
-                alert(`Error: ${err.detail || "Upload failed"}`);
+
+                let errDetail;
+                try {
+                    const err = await res.json();
+                    errDetail = err.detail;
+                } catch (e) {
+                    // If response is not JSON (e.g. 500 HTML from Vercel)
+                    console.error("Non-JSON response received");
+                    if (res.status === 500) {
+                        errDetail = "Server Error (500). If on Vercel, check if DATABASE_URL is set in backend settings.";
+                    } else {
+                        errDetail = `Request failed with status ${res.status}`;
+                    }
+                }
+
+                alert(`Error: ${errDetail || "Upload failed"}`);
                 return;
             }
 

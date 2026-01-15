@@ -1,12 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useClerk } from '@clerk/nextjs';
 import { useEffect } from 'react';
 
 export default function HomePage() {
     const router = useRouter();
     const { isSignedIn, isLoaded } = useAuth();
+    const { openSignIn } = useClerk();
 
     useEffect(() => {
         if (isLoaded) {
@@ -16,6 +17,17 @@ export default function HomePage() {
             }
         }
     }, [isSignedIn, isLoaded, router]);
+
+    const handleGetStarted = () => {
+        if (isSignedIn) {
+            router.push('/dashboard');
+        } else {
+            // Open Clerk sign-in modal with redirect to dashboard after sign-in
+            openSignIn({
+                redirectUrl: '/dashboard',
+            });
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
@@ -36,7 +48,7 @@ export default function HomePage() {
                     {/* CTA Buttons */}
                     <div className="flex gap-4 justify-center">
                         <button
-                            onClick={() => router.push('/dashboard')}
+                            onClick={handleGetStarted}
                             className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 shadow-lg"
                         >
                             Get Started Free

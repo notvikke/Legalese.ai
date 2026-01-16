@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     health: `${API_BASE_URL}/health`,
     userStatus: `${API_BASE_URL}/api/user/status`,
     negotiate: `${API_BASE_URL}/api/negotiate`,
+    chat: `${API_BASE_URL}/api/chat`,
     export: (id: number) => `${API_BASE_URL}/api/export/${id}`,
 };
 

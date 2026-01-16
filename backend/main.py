@@ -277,6 +277,30 @@ async def negotiate_clause(request: RewriteRequest):
     rewritten = await ai.rewrite_clause(request.text)
     return {"rewritten_text": rewritten}
 
+class ChatRequest(BaseModel):
+    user_id: str
+    doc_id: int
+    question: str
+    email: str = None 
+
+@app.post("/api/chat")
+async def chat_endpoint(request: ChatRequest, db: Session = Depends(get_db)):
+    doc = db.query(models.Document).filter(models.Document.id == request.doc_id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    ADMIN_EMAIL = "vikastro911@gmail.com"
+    user = db.query(models.User).filter(models.User.id == request.user_id).first()
+    
+    is_admin = (request.email == ADMIN_EMAIL) or (user and user.email == ADMIN_EMAIL)
+    is_pro = user and (user.is_premium or (user.premium_expires_at and user.premium_expires_at > datetime.now(timezone.utc)))
+    
+    if not (is_admin or is_pro):
+        raise HTTPException(status_code=402, detail="This feature requires a Pro Plan.")
+
+    answer = await ai.chat_with_document(doc.content, request.question)
+    return {"answer": answer}
+
 @app.get("/api/export/{doc_id}")
 def export_report(doc_id: int, db: Session = Depends(get_db)):
     doc = db.query(models.Document).filter(models.Document.id == doc_id).first()

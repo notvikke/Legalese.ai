@@ -127,3 +127,37 @@ async def rewrite_clause(clause_text: str) -> str:
         return "Suggested revision: [Insert mutual cap on liability and mutual indemnification]"
         
     return rewritten
+
+async def chat_with_document(content: str, question: str) -> str:
+    """
+    Answers a question based on the document text using RAG.
+    """
+    token = os.getenv("HF_TOKEN")
+    if not token:
+        return "Error: AI Service credentials not configured (HF_TOKEN)."
+
+    # Truncate content to fit context window (~15k chars is safe for most 32k/8k models context window, 
+    # Mistral 7B is 8k tokens ~32k chars, but let's be safe with 15k chars to leave room for output)
+    safe_content = content[:15000] 
+
+    system_prompt = "You are an expert legal assistant. Use the provided contract text to answer the user's question accurately. If the answer is not in the text, state that clearly. Do not make up legal facts."
+    
+    prompt = f"[INST] {system_prompt}\n\nContract Context:\n{safe_content}\n\nUser Question: {question} [/INST]"
+
+    api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "inputs": prompt,
+        "parameters": {"max_new_tokens": 500, "temperature": 0.4, "return_full_text": False}
+    }
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(api_url, headers=headers, json=payload, timeout=30.0)
+            if response.status_code == 200:
+                 result = response.json()
+                 if isinstance(result, list) and len(result) > 0 and 'generated_text' in result[0]:
+                    return result[0]['generated_text'].strip()
+            return f"Error from AI provider: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"Timeout or Error: {str(e)}"

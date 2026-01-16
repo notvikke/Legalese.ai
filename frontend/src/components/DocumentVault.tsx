@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth, useUser } from '@clerk/nextjs';
+import { Trash2 } from 'lucide-react';
 import { API_ENDPOINTS } from '@/config/api';
 import CountdownTimer from './CountdownTimer';
 import { useDev } from '@/context/DevContext';
@@ -126,6 +127,27 @@ const DocumentVault = () => {
         }
     };
 
+    const handleDelete = async (e: React.MouseEvent, docId: number) => {
+        e.stopPropagation();
+        if (!confirm('Are you sure you want to permanently delete this document and its report?')) return;
+
+        try {
+            const res = await fetch(API_ENDPOINTS.document(docId), {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                setDocuments(prev => prev.filter(d => (d.document_id || d.id) !== docId));
+                fetchData();
+            } else {
+                alert('Failed to delete document');
+            }
+        } catch (error) {
+            console.error('Delete error', error);
+            alert('Error deleting document');
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-slate-900">
@@ -244,8 +266,15 @@ const DocumentVault = () => {
                                         <p className="text-sm text-slate-500">Click to view analysis</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-700 text-slate-300">
+                                <div className="text-right flex items-center gap-3">
+                                    <button
+                                        onClick={(e) => handleDelete(e, doc.document_id || doc.id)}
+                                        className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors group/delete"
+                                        title="Delete Document"
+                                    >
+                                        <Trash2 className="w-5 h-5 opacity-70 group-hover/delete:opacity-100" />
+                                    </button>
+                                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-700 text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                         View Report →
                                     </span>
                                 </div>

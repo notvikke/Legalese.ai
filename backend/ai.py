@@ -94,7 +94,7 @@ async def rewrite_clause(clause_text: str) -> str:
     # 2. Try calling Hugging Face Inference API (Mistral or similar)
     if token:
         try:
-            api_url = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+            api_url = "https://router.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
             headers = {"Authorization": f"Bearer {token}"}
             payload = {
                 "inputs": f"[INST] {system_prompt} \n\n Clause: {clause_text} [/INST]",
@@ -144,7 +144,7 @@ async def chat_with_document(content: str, question: str) -> str:
     
     prompt = f"[INST] {system_prompt}\n\nContract Context:\n{safe_content}\n\nUser Question: {question} [/INST]"
 
-    api_url = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+    api_url = "https://router.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
     headers = {"Authorization": f"Bearer {token}"}
     payload = {
         "inputs": prompt,

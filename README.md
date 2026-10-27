@@ -73,4 +73,3 @@ Upgrade to the **Pro Pass** to unlock unlimited analysis, PDF exports, and the C
 This project is licensed under the MIT License.
 
 ---
-*Built with ❤️ by Vikas*
